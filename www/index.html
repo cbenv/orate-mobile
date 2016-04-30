@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ngCordova/js/ng-cordova.min.js"></script>
+    <script src="cordova.js"></script>
+    <script src="lib/jQuery/js/jquery-1.11.3.min.js"></script>
+    <script src="js/app.js"></script>
+</head>
+
+<body ng-app="orate">
+    <ion-nav-view></ion-nav-view>
+    <script id="index.html" type="text/ng-template">
+        <ion-side-menus>
+            <ion-side-menu-content>
+                <ion-nav-bar class="bar-balanced" back-button-type="button-icon">
+                    <ion-nav-back-button></ion-nav-back-button>
+                </ion-nav-bar>
+                <ion-nav-view name="main"></ion-nav-view>
+            </ion-side-menu-content>
+            <ion-side-menu>
+                <ion-header-bar class="bar-dark">
+                    <h1 class="title" ng-bind="date | date: 'MMMM d, yyyy'"></h1>
+                </ion-header-bar>
+                <ion-content>
+                    <ion-list>
+                        <ion-item ng-repeat="submenu in menu" menu-close ng-click="submenu.toState()">
+                            <span ng-bind="submenu.title"></span>
+                        </ion-item>
+                    </ion-list>
+                </ion-content>
+            </ion-side-menu>
+        </ion-side-menus>
+    </script>
+    <script id="home.html" type="text/ng-template">
+        <ion-view hide-back-button="true">
+            <ion-nav-title>Orate</ion-nav-title>
+            <ion-nav-buttons side="left">
+                <a class="button button-icon icon ion-navicon" menu-toggle="left"></a>
+            </ion-nav-buttons>
+            <ion-content>
+                
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="simple-menu.html" type="text/ng-template">
+        <ion-view hide-back-button="hideBackButton">
+            <ion-nav-title ng-bind="title"></ion-nav-title>
+            <ion-nav-buttons side="left" >
+                <a class="button button-icon icon ion-navicon" menu-toggle="left" ng-if="hideBackButton"></a>
+            </ion-nav-buttons>
+            <ion-content>
+                <ion-list>
+                    <ion-item ng-repeat="submenu in menu" ng-click="submenu.toState()">
+                        <h2 ng-bind="submenu.title"></h2>
+                        <p ng-bind="submenu.subtitle"></p>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="simple-menu-url.html" type="text/ng-template">
+        <ion-view hide-back-button="hideBackButton">
+            <ion-nav-title ng-bind="title"></ion-nav-title>
+            <ion-nav-buttons side="left" >
+                <a class="button button-icon icon ion-navicon" menu-toggle="left" ng-if="hideBackButton"></a>
+            </ion-nav-buttons>
+            <ion-content>
+                <ion-list>
+                    <ion-item ng-repeat="submenu in menu" ng-click="view(submenu.name, submenu.url)">
+                        <h2 ng-bind="submenu.title"></h2>
+                        <p ng-bind="submenu.subtitle"></p>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="daily-readings.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title>Daily Readings</ion-nav-title>
+            <ion-content>
+                <div class="list card" ng-repeat="reading in readings">
+                    <div class="item item-divider">
+                        <h2 ng-bind="reading.title"></h2>
+                        <p ng-bind="reading.reference"></p>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <span ng-bind-html="reading.body"></span>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="reflection-living-faith.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title>Living Faith</ion-nav-title>
+            <ion-content>
+                <div class="list card" ng-show="reflection">
+                    <div class="item item-divider">
+                        <h2 ng-bind="reflection.title"></h2>
+                        <p ng-bind="reflection.feast"></p>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <span ng-bind="reflection.scripture"></span>
+                    </div>
+                    <div class="item item-divider">
+                        <p class="text-right" ng-bind="reflection.citation"></p>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <span ng-bind-html="reflection.devotion"></span>
+                    </div>
+                    <div class="item item-divider">
+                        <p class="text-right" ng-bind="reflection.author"></p>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="reflection-daily-scripture.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title>Daily Scripture</ion-nav-title>
+            <ion-content>
+                <div class="list card">
+                    <div class="item item-divider item-text-wrap">
+                        <h2 ng-bind="title"></h2>
+                    </div>
+                    <span ng-repeat="section in devotion">
+                        <div class="item item-text-wrap">
+                            <span ng-bind="section.text"></span>
+                        </div>
+                        <div class="item item-divider item-text-wrap">
+                            <span ng-bind-html="section.divider"></span>
+                        </div>
+                    </span>
+                </div>
+                <div class="list card">
+                    <div class="item item-divider item-text-wrap">
+                        <h2 ng-bind="quote.title"></h2>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <span ng-bind-html="quote.body"></span>
+                    </div>
+                    <div class="item item-divider">
+                        <p class="text-right" ng-bind="quote.author"></p>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="saint.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title ng-bind="saint.name"></ion-nav-title>
+            <ion-content>
+                <div class="list card">
+                    <div class="item item-divider item-text-wrap">
+                        <h2 ng-bind="saint.name"></h2>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <span ng-bind-html="saint.description"></span>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="divine-office-template.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title ng-bind="liturgy.title"></ion-nav-title>
+            <ion-content>
+                <div class="list card">
+                    <div class="item item-divider item-text-wrap">
+                        <h2 ng-bind="liturgy.title"></h2>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <span ng-bind-html="liturgy.text"></span>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="rosary-template.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title ng-bind="title"></ion-nav-title>
+            <ion-content>
+                <div class="list card" ng-repeat="prayer in prayers track by $index">
+                    <div class="item item-divider" ng-bind="prayer.name"></div>
+                    <div class="item item-text-wrap" ng-bind-html="prayer.text"></div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="stations-cross.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title>Stations of the Cross</ion-nav-title>
+            <ion-content>
+                <div class="list card" ng-repeat="station in stations">
+                    <div class="item item-divider" ng-bind-html="station.name"></div>
+                    <div class="item item-text-wrap" ng-bind-html="station.prayer"></div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="prayer-simple.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title ng-bind="prayer.name"></ion-nav-title>
+            <ion-content>
+                <div class="list card">
+                    <div class="item item-divider item-text-wrap">
+                        <h2 ng-bind="prayer.name"></h2>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <p class="text-center" style="font-size: 16px; color: #444;" ng-bind-html="prayer.text"></p>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="conscience-template.html" type="text/ng-template">
+        <ion-view>
+            <ion-nav-title>Examination of Conscience</ion-nav-title>
+            <ion-content>
+                <ion-list>
+                    <div ng-repeat="section in sections">
+                        <ion-item class="item-divider item-text-wrap" ng-bind-html="section.name"></ion-item>
+                        <ion-checkbox class="item-text-wrap" ng-repeat="question in section.questions">
+                            <span ng-bind="question"></span>
+                        </ion-checkbox>
+                    </div>
+                </ion-list>
+            </ion-content>
+        </ion-view>
+    </script>
+    <script id="settings.html" type="text/ng-template">
+        <ion-view hide-back-button="true">
+            <ion-nav-title>Settings</ion-nav-title>
+            <ion-nav-buttons side="left">
+                <a class="button button-icon icon ion-navicon" menu-toggle="left"></a>
+            </ion-nav-buttons>
+            <ion-content>
+                <ion-list>
+                    
+                </ion-list>
+            </ion-content>
+        </ion-view>
+    </script>
+</body>
+
+</html>

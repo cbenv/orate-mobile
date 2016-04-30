@@ -1,0 +1,18 @@
+.item-divider h2
+{
+    padding-bottom: 1px;
+}
+
+.item h2
+{
+    padding-bottom: 1px;
+}
+
+.card
+{
+    margin: 10px;
+}
+
+.list:last-child.card {
+    margin-bottom: 10px;
+}
